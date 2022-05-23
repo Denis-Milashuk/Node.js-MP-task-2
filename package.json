@@ -1,0 +1,40 @@
+{
+  "name": "node.js-mp-task-2",
+  "version": "1.0.0",
+  "description": "Epam mentoring programm",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./build/index.js",
+    "build": "babel . --out-dir ./build --extensions '.ts,.tsx' --ignore node_modules",
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Denis-Milashuk/Node.js-MP-task-2.git"
+  },
+  "author": "Denis-Milashuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Denis-Milashuk/Node.js-MP-task-2/issues"
+  },
+  "homepage": "https://github.com/Denis-Milashuk/Node.js-MP-task-2#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.12",
+    "@babel/plugin-transform-modules-commonjs": "^7.18.0",
+    "@babel/preset-typescript": "^7.17.12",
+    "@tsconfig/node16": "^1.0.2",
+    "@types/express": "^4.17.13",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "eslint": "^8.15.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.6.2"
+  },
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}

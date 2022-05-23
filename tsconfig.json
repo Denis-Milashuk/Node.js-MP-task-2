@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "moduleResolution": "Node",
+    "allowJs": true,
+    "target": "ES6"
+  },
+  "include": ["src/**/*", "index.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
