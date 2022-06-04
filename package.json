@@ -7,7 +7,8 @@
     "start": "nodemon ./build/index.js",
     "build": "babel . --out-dir ./build --extensions '.ts,.tsx' --ignore node_modules",
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+    "restart": "npm run build && npm start"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "prettier": "^2.6.2"
   },
   "dependencies": {
+    "ajv": "^8.11.0",
     "express": "^4.18.1"
   }
 }
