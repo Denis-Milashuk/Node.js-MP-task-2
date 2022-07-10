@@ -1,47 +1,63 @@
-import express, { Router } from "express";
-import userRepository from "../repository/UserRepository";
-import { User } from "../model/User";
-import { userValidator } from "../middleware/validator/userValidator";
+import express, {Router} from "express";
+import userService from "../service/UserService";
+import {UserDto} from "../model/dto/UserDto";
+import {userValidator} from "../middleware/userValidator";
+import {UserEntity} from "../model/entity/UserEntity";
+import {UserConverter} from "../utility/UserConverter";
+import {UpdateResult} from "typeorm";
 
 const router: Router = express.Router();
 
-router.get("/:id", (req, res) => {
-  const user: User | undefined = userRepository.getById(req.params.id);
+router.get("/:id", async (req, res) => {
+  const user: UserEntity | null = await userService.getById(Number(req.params.id));
 
-  if (!user) res.sendStatus(404);
-
-  res.json(user);
+  if (!user) {
+    res.sendStatus(404);
+  } else {
+    res.json(UserConverter.convertToDto(user));
+  }
 });
 
-router.post("/", userValidator, (req, res) => {
-  const user: User = req.body;
-  userRepository.create(user);
+router.post("/", userValidator, async (req, res) => {
+  const user: UserDto = req.body;
+  await userService.create(UserConverter.convertToEntity(user));
   res.sendStatus(201);
 });
 
-router.put("/", userValidator, (req, res) => {
-  const newUser: User = req.body;
-  const oldUser: User | undefined = userRepository.getById(newUser.id);
+router.put("/", userValidator, async (req, res) => {
+  const updatedUser: UserDto = req.body;
+  const updateResult: UpdateResult = await userService.update(UserConverter.convertToEntity(updatedUser));
 
-  if (!oldUser) res.sendStatus(404);
-
-  userRepository.update(newUser);
-  res.send("Updated");
+  if (!updateResult.affected) {
+    res.sendStatus(404);
+  } else {
+    res.send("Updated");
+  }
 });
 
-router.get("/", (req, res) => {
-  const loginSubstring: string = req.query.loginSubstring as string;
-  const limit: number = req.query.limit as unknown as number;
+router.get("/", async (req, res) => {
+  const loginSubstring: string | undefined = req.query.loginSubstring as string | undefined;
+  const limit: number | undefined = req.query.limit as number | undefined;
 
-  res.json(userRepository.getAutoSuggestUsers(loginSubstring, limit));
+  console.log(`LoginSubstring: ${loginSubstring}; limit: ${limit}`);
+  const users: UserEntity[] = await userService.getAutoSuggestUsers(loginSubstring, limit);
+
+  if (users.length === 0) {
+    res.sendStatus(404);
+  } else {
+    const userDtos: UserDto[] = users.map((user) => UserConverter.convertToDto(user));
+    return res.json(userDtos);
+  }
 });
 
-router.delete("/:id", (req, res) => {
-  const isDeleted = userRepository.softDelete(req.params.id);
+router.delete("/:id", async (req, res) => {
+  const isDeleted: boolean = await userService.softDelete(Number(req.params.id));
 
-  if (!isDeleted) res.sendStatus(404);
-
-  res.send("Deleted");
+  if (!isDeleted) {
+    res.sendStatus(404);
+  } else {
+    res.send("Deleted");
+  }
 });
 
 export default router;

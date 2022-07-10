@@ -1,6 +1,6 @@
 import Ajv from "ajv";
-import { userSchema } from "../../model/UserSchema";
-import { NextFunction, Request, Response } from "express";
+import {userSchema} from "../model/dto/UserSchema";
+import {NextFunction, Request, Response} from "express";
 
 const ajv = new Ajv();
 

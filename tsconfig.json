@@ -5,7 +5,10 @@
     "moduleResolution": "Node",
     "allowJs": true,
     "target": "ES6",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
   },
   "include": ["src/**/*", "index.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
