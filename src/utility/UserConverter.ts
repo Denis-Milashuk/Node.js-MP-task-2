@@ -1,8 +1,9 @@
-import {UserEntity} from "../model/entity/UserEntity";
-import {UserDto} from "../model/dto/UserDto";
+import { UserEntity } from "../model/entity/UserEntity";
+import { UserDto } from "../model/dto/UserDto";
+import { Converter } from "./Converter";
 
-export class UserConverter {
-  public static convertToDto(entity: UserEntity): UserDto {
+class UserConverter extends Converter<UserEntity, UserDto> {
+  public convertToDto(entity: UserEntity): UserDto {
     return {
       id: entity.id.toString(),
       login: entity.login,
@@ -12,9 +13,11 @@ export class UserConverter {
     };
   }
 
-  public static convertToEntity(dto: UserDto): UserEntity {
+  public convertToEntity(dto: UserDto): UserEntity {
     const entity = new UserEntity();
-    entity.id = Number(dto.id);
+    if (dto.id) {
+      entity.id = Number(dto.id);
+    }
     entity.login = dto.login;
     entity.password = dto.password;
     entity.age = dto.age;
@@ -23,3 +26,5 @@ export class UserConverter {
     return entity;
   }
 }
+
+export default new UserConverter();

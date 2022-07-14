@@ -1,6 +1,6 @@
-import {UserEntity} from "../model/entity/UserEntity";
+import { UserEntity } from "../model/entity/UserEntity";
 import AppDataSource from "../postgres/data-source";
-import {FindManyOptions, InsertResult, Like, Repository, UpdateResult} from "typeorm";
+import { FindManyOptions, InsertResult, Like, Repository, UpdateResult } from "typeorm";
 
 class UserService {
   private userRepository: Repository<UserEntity> = AppDataSource.getRepository(UserEntity);
@@ -35,7 +35,7 @@ class UserService {
   }
 
   public async softDelete(id: number): Promise<boolean> {
-    const userEntity: UserEntity | null = await this.userRepository.findOneBy({id: id});
+    const userEntity: UserEntity | null = await this.userRepository.findOneBy({ id: id });
     if (!userEntity || userEntity.isDeleted) return false;
 
     userEntity.isDeleted = true;

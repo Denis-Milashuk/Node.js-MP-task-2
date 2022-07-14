@@ -1,32 +1,37 @@
-import express, {Router} from "express";
+import express, { Router } from "express";
 import userService from "../service/UserService";
-import {UserDto} from "../model/dto/UserDto";
-import {userValidator} from "../middleware/userValidator";
-import {UserEntity} from "../model/entity/UserEntity";
-import {UserConverter} from "../utility/UserConverter";
-import {UpdateResult} from "typeorm";
+import { UserDto } from "../model/dto/UserDto";
+import { userValidator } from "../middleware/userValidator";
+import { UserEntity } from "../model/entity/UserEntity";
+import userConverter from "../utility/UserConverter";
+import { UpdateResult } from "typeorm";
 
-const router: Router = express.Router();
+const userRouter: Router = express.Router();
 
-router.get("/:id", async (req, res) => {
-  const user: UserEntity | null = await userService.getById(Number(req.params.id));
+userRouter.get("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.sendStatus(400);
+  }
+
+  const user: UserEntity | null = await userService.getById(id);
 
   if (!user) {
     res.sendStatus(404);
   } else {
-    res.json(UserConverter.convertToDto(user));
+    res.json(userConverter.convertToDto(user));
   }
 });
 
-router.post("/", userValidator, async (req, res) => {
+userRouter.post("/", userValidator, async (req, res) => {
   const user: UserDto = req.body;
-  await userService.create(UserConverter.convertToEntity(user));
+  await userService.create(userConverter.convertToEntity(user));
   res.sendStatus(201);
 });
 
-router.put("/", userValidator, async (req, res) => {
-  const updatedUser: UserDto = req.body;
-  const updateResult: UpdateResult = await userService.update(UserConverter.convertToEntity(updatedUser));
+userRouter.put("/", userValidator, async (req, res) => {
+  const user: UserEntity = userConverter.convertToEntity(req.body);
+  const updateResult: UpdateResult = await userService.update(user);
 
   if (!updateResult.affected) {
     res.sendStatus(404);
@@ -35,7 +40,7 @@ router.put("/", userValidator, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+userRouter.get("/", async (req, res) => {
   const loginSubstring: string | undefined = req.query.loginSubstring as string | undefined;
   const limit: number | undefined = req.query.limit as number | undefined;
 
@@ -45,13 +50,18 @@ router.get("/", async (req, res) => {
   if (users.length === 0) {
     res.sendStatus(404);
   } else {
-    const userDtos: UserDto[] = users.map((user) => UserConverter.convertToDto(user));
+    const userDtos: UserDto[] = users.map((user) => userConverter.convertToDto(user));
     return res.json(userDtos);
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  const isDeleted: boolean = await userService.softDelete(Number(req.params.id));
+userRouter.delete("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (Number.isNaN(id)) {
+    res.sendStatus(400);
+  }
+
+  const isDeleted: boolean = await userService.softDelete(id);
 
   if (!isDeleted) {
     res.sendStatus(404);
@@ -60,4 +70,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-export default router;
+export default userRouter;

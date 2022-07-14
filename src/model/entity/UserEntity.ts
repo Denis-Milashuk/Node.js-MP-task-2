@@ -1,4 +1,4 @@
-import {Column, Entity, Index, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
 export class UserEntity {
@@ -6,7 +6,7 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column("varchar", {length: 150})
+  @Column("varchar", { length: 150 })
   login: string;
 
   @Column("varchar")
@@ -15,6 +15,10 @@ export class UserEntity {
   @Column("int")
   age: number;
 
-  @Column("boolean", {default: false})
+  @Column({
+    type: "boolean",
+    name: "is_deleted",
+    default: false,
+  })
   isDeleted: boolean;
 }
