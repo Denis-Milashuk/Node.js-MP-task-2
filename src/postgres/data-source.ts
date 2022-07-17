@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { UserEntity } from "../model/entity/UserEntity";
 import { GroupEntity } from "../model/entity/GroupEntity";
+import { logger } from "../logging/winstonLogger";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -18,8 +19,6 @@ const AppDataSource = new DataSource({
   migrationsRun: true,
 });
 
-AppDataSource.initialize()
-  .then(() => console.log("Database started"))
-  .catch((error) => console.log(error));
+AppDataSource.initialize().then(() => logger.info("Database is connected"));
 
 export default AppDataSource;

@@ -18,7 +18,7 @@ export class GroupEntity {
   })
   permissions: Permission[];
 
-  @ManyToMany(() => UserEntity, { cascade: ["remove", "insert", "update"], eager: true })
+  @ManyToMany(() => UserEntity, { cascade: ["remove", "insert", "update"] })
   @JoinTable({
     name: "groups_entities",
     joinColumn: {

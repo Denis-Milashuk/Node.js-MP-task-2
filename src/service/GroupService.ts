@@ -8,17 +8,33 @@ class GroupService {
   private groupRepository: Repository<GroupEntity> = AppDataSource.getRepository(GroupEntity);
 
   public async find(): Promise<GroupEntity[]> {
-    return this.groupRepository.find();
+    return this.groupRepository.find({
+      relations: {
+        users: true,
+      },
+      where: {
+        users: {
+          isDeleted: false,
+        },
+      },
+    });
   }
 
   public async findById(id: number): Promise<GroupEntity | null> {
-    return this.groupRepository.findOneBy({
-      id: id,
+    return this.groupRepository.findOne({
+      relations: {
+        users: true,
+      },
+      where: {
+        id: id,
+        users: {
+          isDeleted: false,
+        },
+      },
     });
   }
 
   public async create(group: GroupEntity): Promise<GroupEntity> {
-    console.log("Saved entity: " + JSON.stringify(group));
     return this.groupRepository.save(group);
   }
 
@@ -66,8 +82,6 @@ class GroupService {
     }
 
     group.users = group.users.filter((user) => user.id !== deletedUser.id);
-    console.log(deletedUser.id);
-    console.log(group);
     await this.groupRepository.save(group);
     return true;
   }
