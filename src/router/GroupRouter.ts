@@ -5,9 +5,11 @@ import { GroupDto } from "../model/dto/GroupDto";
 import groupConverter from "../utility/GroupConverter";
 import { groupValidator } from "../middleware/userValidator";
 import { DeleteResult, UpdateResult } from "typeorm";
+import customPassport from "../middleware/security/passportStrategies";
 
 const groupRouter: Router = express.Router();
 
+groupRouter.use(customPassport.authenticate("bearer", { session: false }));
 groupRouter.get("/", async (req, res, next) => {
   try {
     const groups: GroupEntity[] = await groupService.find();

@@ -5,9 +5,11 @@ import { userValidator } from "../middleware/userValidator";
 import { UserEntity } from "../model/entity/UserEntity";
 import userConverter from "../utility/UserConverter";
 import { UpdateResult } from "typeorm";
+import customPassport from "../middleware/security/passportStrategies";
 
 const userRouter: Router = express.Router();
 
+userRouter.use(customPassport.authenticate("bearer", { session: false }));
 userRouter.get("/:id", async (req, res, next) => {
   try {
     const id = Number(req.params.id);

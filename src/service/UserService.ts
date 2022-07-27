@@ -12,6 +12,13 @@ class UserService {
     });
   }
 
+  public async getByLogin(login: string): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy({
+      login: login,
+      isDeleted: false,
+    });
+  }
+
   public async create(user: UserEntity): Promise<InsertResult> {
     return this.userRepository.insert(user);
   }
